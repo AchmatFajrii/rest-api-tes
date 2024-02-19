@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+model Movie{
+  id        Int      @id @default(autoincrement())
+  title     String   @db.VarChar(255)
+  year      Int
+  image     String?   
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId Int?
+  User      User?      @relation(fields: [userId], references: [id])
+  userId    Int?
+}
+model Category {
+  id      Int      @id @default(autoincrement())
+  name    String?
+  movies   Movie[]
+}
+
+model Actor{
+  id      Int      @id @default(autoincrement())
+  name    String?
+  inputTime DateTime	@db.Time(6)       
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model User {
+  id          Int      @id @default(autoincrement())
+  username    String   @unique
+  email       String   @unique
+  password    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  movies   Movie[]
+}
+
